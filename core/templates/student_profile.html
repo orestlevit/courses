@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load core_tags %}
+
+{% block content %}
+
+<section style="background-color: #eee;">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+
+                        <img style="width: 100px; height: 100px"
+                             {% if object.avatar %}
+                             src="{{ object.avatar.url }}"
+                             {% else %}
+                             src="{% static 'img/avatar.png' %}"
+                             {% endif %}
+                             class="rounded-circle mb-3" alt="..."
+                        >
+                        <h5 class="my-3">{{ object.first_name }} {{ object.last_name }}</h5>
+                        <p class="text-muted mb-1">{{ object.role }}</p>
+                    </div>
+                </div>
+                <div class="card mb-4 mb-lg-0">
+                    <h5 class="px-3 pt-3">Completed Course</h5>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush rounded-3">
+                            {% for completed_course in object.course_finished.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                {{ completed_course }} -> {{ completed_course|avg:object|floatformat:2 }}%
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Full Name</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{ object.first_name }} {{ object.last_name }}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Email</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{ object.email }}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Username</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{ object.username }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card mb-4 mb-md-0">
+                            <div class="card-body">
+                                <p class="mb-4">
+                                    Course Status
+                                </p>
+                                {% for course in object.course.all %}
+                                <p class="mb-1" style="font-size: 20px;">{{ course.title }}
+                                    lectures/homeworks</p>
+                                <div class="progress rounded mb-3" style="height: 20px;">
+                                    <div
+                                            {% if course.id|width:object == 100 %}
+                                            class="progress-bar bg-success"
+                                            {% endif %}
+                                            class="progress-bar" role="progressbar"
+                                            style="width: {{ course.id|width:object }}%"
+                                    >{{ course.id|width:object }}%
+                                    </div>
+                                </div>
+                                <div class="progress rounded mb-3" style="height: 20px;">
+                                    <div
+                                            {% if course.id|avg:object == 100 %}
+                                            class="progress-bar bg-success"
+                                            {% elif course.id|avg:object >= 75 and course.id|avg:object <= 89 %}
+                                        class="progress-bar bg-info"
+                                        {% elif course.id|avg:object >= 60 and course.id|avg:object <= 74 %}
+                                        class="progress-bar bg-warning"
+                                        {% elif course.id|avg:object < 60 %}
+                                        class="progress-bar bg-danger"
+                                        {% endif %}
+                                        class="progress-bar" role="progressbar"
+                                        style="width: {{ course.id|avg:object }}%"
+                                        >{{ course.id|avg:object|floatformat:2 }}%
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

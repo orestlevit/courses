@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block script %}
+<script src="https://js.stripe.com/v3/"></script> {% endblock script%}
+{% block content %}
+<div class="container">
+    <div class="card md-3">
+        <img
+                {% if object.photo %}
+                src="{{ object.photo.url }}"
+                {% else %}
+                src="http://via.placeholder.com/900x300"
+                {% endif %}
+                height="250px" alt="name" class="card-img-top"
+        >
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h5 class="card-title">{{ object.title }}</h5>
+
+                <a href="students/" class="btn btn-primary">Students</a>
+            </div>
+            <p class="card-text text-muted">{{ object.category }}</p>
+            <p class="card-text text-info">{{ object.deadline.date }}</p>
+            <p class="card-text">{{ object.description|safe }}</p>
+
+            {% if lectures %}
+            <ul class="list-group list-group-flush">
+                {% for lecture in lectures %}
+                <li class="list-group-item">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ lecture.title }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <img
+                                    {% if lecture.photo %}
+                                    src="{{ lecture.photo.url }}"
+                                    {% else %}
+                                    src="http://via.placeholder.com/300x100"
+                                    {% endif %}
+                                    alt="name" class="card-img-top" height="100px">
+
+                            <p class="card-text">
+                                {{ lecture.description|safe|truncatewords:30 }}
+                            </p>
+                            <div class="car-footer bg-transparent">
+                                <a href="lecture/{{ lecture.id }}" class="btn btn-outline-primary">
+                                    View more
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </li>
+
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if key is not None and user.role.title == "Student" %}
+            <form action="/payment-charge/{{ object.id }}" method="post">{% csrf_token %}
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                        data-key="{{ key }}"
+                        data-description="You are purchasing: {{ object.title }}"
+                        data-amount="{% widthratio object.price 1 100 %}"
+                        data-currency="USD"
+                        data-locale="auto">
+                </script>
+            </form>
+
+            {% endif %}
+
+            {% if course in user.course.all %}
+            <div class="card-footer">
+                <h3>Comments</h3>
+                {% if comments %}
+                {% include "includes/comments.html" %}
+                {% endif %}
+                <form method="POST" class="form-group d-flex"> {% csrf_token %}
+                    <textarea name="comment" id="comment" cols="30" rows="2" required
+                              class="form-control mb-2"></textarea>
+                    <button type="submit" class="btn btn-outline-primary">Send</button>
+                </form>
+            </div>
+            {% else %}
+            <p class="text-warning fs-3">You not subscribe at this course</p>
+            {% endif %}
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}

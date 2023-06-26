@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -13,7 +15,9 @@ def poster_upload_to(obj, filename):
 class ProfileUser(AbstractUser):
     avatar = models.ImageField(upload_to=avatar_upload_to, blank=True, null=True)
     role = models.ForeignKey("Role", on_delete=models.CASCADE)
-    course = models.ManyToManyField("Course", blank=True)
+    course = models.ManyToManyField("Course", blank=True, related_name="student_course")
+    lecture_finished = models.ManyToManyField("Lecture", related_name="lecture_finished", blank=True)
+    course_finished = models.ManyToManyField("Course", related_name="course_finished", blank=True)
 
 
 class Role(models.Model):
@@ -26,6 +30,7 @@ class Role(models.Model):
 class Category(models.Model):
     title = models.CharField(max_length=10)
     is_enabled = models.BooleanField()
+
 
     def __str__(self):
         return self.title
@@ -58,7 +63,7 @@ class Lecture(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey("ProfileUser", on_delete=models.CASCADE)
     course = models.ForeignKey("Course", on_delete=models.CASCADE)
-    massage = models.TextField
+    message = models.TextField()
     is_approved = models.BooleanField()
 
 
@@ -66,20 +71,47 @@ class Comment(models.Model):
         return f"{self.user.username} -> {self. course}"
 
 class Homework(models.Model):
-    lacture = models.ForeignKey("Lacture", on_delete=models.CASCADE)
+    lecture = models.ForeignKey("Lecture", on_delete=models.CASCADE)
     description = models.TextField()
 
     def __str__(self):
         return self.description
 
 class HomeworkStudentDone(models.Model):
-    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    user = models.ForeignKey("ProfileUser", on_delete=models.CASCADE)
     homework = models.ForeignKey("Homework", on_delete=models.CASCADE)
     user_homework = models.CharField(max_length=255)
     mark = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.user.username} , {self.homework.lecture.title}"
+
+
+class Bases(models.Model):
+    title = models.CharField(max_length=100)
+
+
+
+    def __str__(self):
+        return self.title
+
+
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey("ProfileUser", on_delete=models.CASCADE)
+    course = models.ForeignKey("Course", on_delete=models.CASCADE)
+    payment_id = models.CharField(max_length=255)
+    payment_message = models.CharField(max_length=255)
+    payment_status = models.CharField(max_length=255)
+    date = models.IntegerField()
+
+    def __str__(self):
+        return datetime.datetime.utcfromtimestamp(self.date).ctime()
+
+
+
+
 
 
 models = [Category, Role, HomeworkStudentDone]

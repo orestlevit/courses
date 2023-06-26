@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block content %}
+<div class="container">
+    <form action="/add-lecture/" class="col-6" method="post" enctype="multipart/form-data">{% csrf_token %}
+        {% bootstrap_form form %}
+        <button class="btn btn-success" type="submit" >Submit</button>
+    </form>
+</div>
+{% endblock %}

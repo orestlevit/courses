@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="alert alert-success" role="alert">
+    <form method="post" class="d-flex-column text-center">{% csrf_token %}
+        <p>Thank you for your payment</p>
+        <a href="/" class="btn btn-primary">To main page</a>
+    </form>
+</div>
+{% endblock %}

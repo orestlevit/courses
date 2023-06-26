@@ -1,0 +1,10 @@
+celery==5.2.7
+Django==4.1.7
+django-bootstrap4==22.3
+django-summernote==0.8.20.0
+Pillow==9.0.1
+python-decouple==3.6
+python-dotenv==0.19.2
+redis==4.5.5
+stripe==5.0.0
+psycopg2-binary==2.9.6
