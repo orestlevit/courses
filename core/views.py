@@ -1,9 +1,9 @@
 import stripe
-from allauth.account.views import PasswordResetView
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import PasswordResetCompleteView, PasswordResetDoneView, PasswordResetConfirmView
+from django.contrib.auth.views import PasswordResetCompleteView, PasswordResetDoneView, PasswordResetConfirmView, \
+    PasswordResetView
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -191,7 +191,6 @@ class EvaluateHomework(TemplateView):
         return redirect(request.META["HTTP_REFERER"])
 
 
-
 class AddLectureView(LoginRequiredMixin, CreateView):
     template_name = "add_lecture.html"
     model = Lecture
@@ -203,32 +202,28 @@ class AddLectureView(LoginRequiredMixin, CreateView):
         return super(AddLectureView, self).form_valid(form)
 
 
-
-
 class AddHomeworkView(LoginRequiredMixin, CreateView):
-    model =  Homework
+    model = Homework
     template_name = "add_homework.html"
     success_url = "/"
     fields = "__all__"
+
     def form_valid(self, form):
         form.save()
         return super(AddHomeworkView, self).form_valid(form)
 
 
-
-class StudentProfileView(LoginRequiredMixin,DetailView):
+class StudentProfileView(LoginRequiredMixin, DetailView):
     model = get_user_model()
     template_name = "student_profile.html"
     pk_url_kwarg = "pk_student"
 
 
-class EditProfileView(LoginRequiredMixin,UpdateView):
+class EditProfileView(LoginRequiredMixin, UpdateView):
     model = get_user_model()
     template_name = "edit_profile.html"
     fields = ["first_name", "last_name", "username", "email", "avatar"]
     success_url = "/profile"
-
-
 
 
 #                   FORGOT PASSWORD                 #
@@ -242,14 +237,12 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = "reset_password_send.html"
 
 
-
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = "reset_password_confirm.html"
     success_url = "/reset-password-complete"
 
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
-    template_name = "reset_password_complete"
-
+    template_name = "reset_password_complete.html"
 
 #                   FORGOT PASSWORD                 #

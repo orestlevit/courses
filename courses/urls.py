@@ -31,10 +31,10 @@ urlpatterns = [
     path('profile/<int:pk>/edit/', views.EditProfileView.as_view()),
 
 
-    path("reset-password/", views.CustomPasswordResetView.as_view(), name='reset-password'),
-    path("reset-password-send/", views.CustomPasswordResetDoneView.as_view(), name='password-reset-done'),
-    path("reset-password-complete/", views.CustomPasswordResetCompleteView.as_view(), name='password-reset-complete'),
-    path("reset/<uidb64>/<token>/", views.CustomPasswordResetConfirmView.as_view(), name='password-reset-confirm')
+    path("reset-password/", views.CustomPasswordResetView.as_view(), name='reset_password'),
+    path("reset-password-send/", views.CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path("reset-password-complete/", views.CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path("reset/<uidb64>/<token>/", views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm')
 
     # path('reset-password/', views.CustomPasswordResetView.as_view(), name='reset-password'),
     # path('reset-password-send/', views.CustomPasswordResetDoneView.as_view(), name='reset-password-done'),

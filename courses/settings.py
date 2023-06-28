@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     "debug_toolbar"
 ]
-SITE_ID = 1
+SITE_ID = 2
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
